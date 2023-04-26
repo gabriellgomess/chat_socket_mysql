@@ -48,28 +48,46 @@ connection.connect(function (error) {
   }
 });
 
+app.post("/mark_messages_as_read", function (request, result) {
+    connection.query(
+      "UPDATE mensagens SET unread = FALSE WHERE remetente = ? AND receptor = ? AND unread = TRUE",
+      [request.body.sender, request.body.receiver],
+      function (error, res) {
+        if (error) {
+          console.error("Error:", error);
+          result.status(500).send("Internal server error");
+          return;
+        }
+  
+        result.json({ status: "success" });
+      }
+    );
+  });
+  
+
 // create api to return all messages
 app.post("/get_messages", function (request, result) {
-  console.log("Request body:", request.body);
-  connection.query(
-    "SELECT * FROM mensagens WHERE (remetente = ? AND receptor = ?) OR (remetente = ? AND receptor = ?)",
-    [
-      request.body.sender,
-      request.body.receiver,
-      request.body.receiver,
-      request.body.sender,
-    ],
-    function (error, messages) {
-      if (error) {
-        console.error("Error:", error);
-        result.status(500).send("Internal server error");
-        return;
+    console.log("Request body:", request.body);
+    connection.query(
+      "SELECT *, DATE_FORMAT(timestamp, '%Y-%m-%d %H:%i:%s') as formatted_timestamp FROM mensagens WHERE (remetente = ? AND receptor = ?) OR (remetente = ? AND receptor = ?)",
+      [
+        request.body.sender,
+        request.body.receiver,
+        request.body.receiver,
+        request.body.sender,
+      ],
+      function (error, messages) {
+        if (error) {
+          console.error("Error:", error);
+          result.status(500).send("Internal server error");
+          return;
+        }
+  
+        result.json(messages);
       }
-
-      result.json(messages);
-    }
-  );
-});
+    );
+  });
+  
 
 app.get("/connected_users", function (req, res) {
   res.json(getConnectedUsers());
@@ -126,18 +144,20 @@ io.on("connection", function (socket) {
 
     io.to(socketId).emit("new_message", data);
 
-    // save in database
-    connection.query(
-      "INSERT INTO mensagens (remetente, receptor, mensagem) VALUES (?, ?, ?)",
-      [data.sender, data.receiver, data.message],
-      function (error, result) {
-        if (error) {
-          console.error("Error inserting message:", error);
-          return;
-        }
-        console.log("Message inserted successfully:", result);
+   // inserir no banco de dados
+   connection.query(
+    "INSERT INTO mensagens (remetente, receptor, mensagem, timestamp) VALUES (?, ?, ?, ?)",
+    [data.sender, data.receiver, data.message, new Date()],
+    function (error, result) {
+      if (error) {
+        console.error("Error inserting message:", error);
+        return;
       }
-    );
+      console.log("Message inserted successfully:", result);
+    }
+  );
+  
+  
   });
 });
 

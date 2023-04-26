@@ -101,7 +101,7 @@
             height: 55px;
             border-radius: 14px;
             background-color: #f28b26;
-            background-image: linear-gradient(to right,#f28b26,#e72b4f);
+            background-image: linear-gradient(to right, #f28b26, #e72b4f);
             box-shadow: 5px 5px 11px #bebebe,
                 -5px -5px 11px #ffffff;
             display: flex;
@@ -112,22 +112,33 @@
             color: #fff;
             font-weight: bold;
         }
-        .btn-send{
+
+        .btn-send {
             background-color: #e72b4f;
             color: #fff;
         }
+        .container-message{
+            display: flex;
+            flex-direction: column;
+        }
+
         *::-webkit-scrollbar {
-        width: 8px;               /* width of the entire scrollbar */
+            width: 8px;
+            /* width of the entire scrollbar */
         }
 
         *::-webkit-scrollbar-track {
-        background: transparent;        /* color of the tracking area */
+            background: transparent;
+            /* color of the tracking area */
         }
 
         *::-webkit-scrollbar-thumb {
-        background-color: #f28b26;    /* color of the scroll thumb */
-        border-radius: 20px;       /* roundness of the scroll thumb */
-        border: none;  /* creates padding around scroll thumb */
+            background-color: #f28b26;
+            /* color of the scroll thumb */
+            border-radius: 20px;
+            /* roundness of the scroll thumb */
+            border: none;
+            /* creates padding around scroll thumb */
         }
     </style>
 </head>
@@ -177,7 +188,7 @@
         };
 
         // estabelecendo a conexão do socket com o servidor
-        var socket = io.connect("http://localhost:3000");
+        var socket = io.connect("http://10.100.10.56:3000");
 
         function scrollToBottom() {
             var messages = document.getElementById('messages');
@@ -244,7 +255,7 @@
             $("#conversationHeader").html("Você está falando com <span style='font-weight: bold'>" + username + "</span>");
             // call an ajax
             $.ajax({
-                url: "http://localhost:3000/get_messages",
+                url: "http://10.100.10.56:3000/get_messages",
                 method: "POST",
                 contentType: "application/json", // Adicione esta linha
                 data: JSON.stringify({ // Modifique esta linha
@@ -257,10 +268,25 @@
                     var html = "";
                     for (var a = 0; a < messages.length; a++) {
                         if (messages[a].remetente && messages[a].mensagem) {
+                            var messageDateTime = new Date(messages[a].timestamp).toLocaleString();
                             if (messages[a].remetente === sender) {
-                                html += "<div class='container-send-message'><div class='send-message'>Você diz: " + messages[a].mensagem + "</div></div>";
+                                html += `<div class='container-send-message'>
+                                            <div class='send-message container-message'>
+                                                <span style='font-weight: bold'>Eu</span>
+                                                <span>${messages[a].mensagem}</span>
+                                                <small style='font-size: 10px; text-align: right'>${messageDateTime}</small>
+                                            </div>
+                                        </div>`;
                             } else {
-                                html += "<div class='container-recepted-message'><div class='recepted-message'>" + messages[a].remetente + " diz: " + messages[a].mensagem + "</div></div>";
+                                html += `<div class='container-recepted-message'>
+                                            <div class='recepted-message container-message'>
+                                                <span style='font-weight: bold'>${messages[a].remetente}</span>
+                                                <span>${messages[a].mensagem}</span>
+                                                <small style='font-size: 10px; text-align: right'>${messageDateTime}</small>
+                                            </div>
+                                        </div>`;
+
+                                
                             }
                         }
                     }
@@ -280,14 +306,25 @@
             // get message
             var message = $("#message").val();
             // send message to server
+            
             socket.emit("send_message", {
                 sender: sender,
                 receiver: receiver,
-                message: message
+                message: message,
+                datetime: new Date().toLocaleString()
             });
             // append your own message
             var html = "";
-            html += "<div class='container-send-message'><div class='send-message'>Você diz: " + message + "</div></div>";
+            let messageDateTime = new Date().toLocaleString();
+
+            // html += "<div class='container-send-message'><div class='send-message'>Você diz: " + message + "</div></div>";
+            html += `<div class='container-send-message'>
+                                            <div class='send-message container-message'>
+                                                <span style='font-weight: bold'>Eu</span>
+                                                <span>${message}</span>
+                                                <small style='font-size: 10px; text-align: right'>${messageDateTime}</small>
+                                            </div>
+                                        </div>`;
             $("#messages").append(html);
             scrollToBottom();
             // prevent form from submitting
@@ -297,9 +334,17 @@
 
         // listen from server
         socket.on("new_message", function(data) {
+            console.log("DATA ", data)
             if (data.sender === receiver) {
                 var html = "";
-                html += "<div class='container-recepted-message'><div class='recepted-message'>" + data.sender + " diz: " + data.message + "</div></div>";
+                // html += "<div class='container-recepted-message'><div class='recepted-message'>" + data.sender + " diz: " + data.message + "</div></div>";
+                html += `<div class='container-recepted-message'>
+                                            <div class='recepted-message container-message'>
+                                                <span style='font-weight: bold'>${data.sender}</span>
+                                                <span>${data.message}</span>
+                                                <small style='font-size: 10px; text-align: right'>${data.datetime}</small>
+                                            </div>
+                                        </div>`;
                 $("#messages").append(html);
                 scrollToBottom();
             } else {
