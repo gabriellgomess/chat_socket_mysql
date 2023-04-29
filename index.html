@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="styles/main.css">
+    <title>Chat App</title>
+</head>
+
+<body>
+    <!-- Incluindo bibliotecas -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.socket.io/4.1.2/socket.io.min.js"></script>
+    <div class="container-fluid">
+        <div class="users">
+            <div class="profile">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#ccc" class="bi bi-person-circle" viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                </svg>
+                <h1 id="my-name"></h1>
+            </div>
+
+            <div id="users">
+                <div id="user-gabriel" onclick="onUserSelected('gabriel');" class="card-conversa m-3">Gabriel <span id="unread-gabriel" class="badge bg-success"></span></div>
+                <div id="user-sara" onclick="onUserSelected('sara');" class="card-conversa m-3">Sara <span id="unread-sara" class="badge bg-success"></span></div>
+                <div id="user-junior" onclick="onUserSelected('junior');" class="card-conversa m-3">Junior <span id="unread-junior" class="badge bg-success"></span></div>
+                <div id="user-isadora" onclick="onUserSelected('isadora');" class="card-conversa m-3">Isadora <span id="unread-isadora" class="badge bg-success"></span></div>
+                <div id="user-ignacio" onclick="onUserSelected('ignacio');" class="card-conversa m-3">Ignácio <span id="unread-ignacio" class="badge bg-success"></span></div>
+            </div>
+        </div>
+        <div class="chat">
+            <div style="margin-bottom: 15px;" id="conversationHeader" class="conversationHeader">
+
+            </div>
+            <div id="messages" class="messages">
+
+            </div>
+            <form class="form-message" onsubmit="return sendMessage();">
+                <input id="message" class="form-control" placeholder="Digite sua mensagem...">
+                <button type="submit" class="btn btn-send"><i class="fa-regular fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </div>
+    <script src="js/socket.js"></script>
+</body>
+
+</html>

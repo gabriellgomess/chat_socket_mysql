@@ -1,0 +1,145 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+}
+
+.container-fluid {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 0 !important;
+}
+
+.users {
+    flex: 1;
+    max-width: 300px;
+    border-right: 1px solid #ccc;
+    padding: 20px;
+    overflow-y: auto;
+    background: #e0e0e0;
+}
+
+#users {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    justify-content: space-between;
+}
+
+.messages {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding: 0 20px 0 0;
+}
+
+.send-message {
+    background-color: #ccc;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    width: fit-content;
+}
+
+.recepted-message {
+    background-color: #f28b2680;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    width: fit-content;
+}
+
+.container-send-message {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.container-recepted-message {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.form-message {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 7px
+}
+
+.card-hidden {
+    display: none;
+}
+
+.profile {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.card-conversa {
+    height: 55px;
+    border-radius: 14px;
+    background-color: #f28b26;
+    background-image: linear-gradient(to right, #f28b26, #e72b4f);
+    box-shadow: 5px 5px 11px #bebebe,
+        -5px -5px 11px #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+}
+
+.btn-send {
+    background-color: #e72b4f;
+    color: #fff;
+}
+.container-message{
+    display: flex;
+    flex-direction: column;
+}
+
+*::-webkit-scrollbar {
+    width: 8px;
+    /* width of the entire scrollbar */
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+    /* color of the tracking area */
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #f28b26;
+    /* color of the scroll thumb */
+    border-radius: 20px;
+    /* roundness of the scroll thumb */
+    border: none;
+    /* creates padding around scroll thumb */
+}
+@media only screen and (max-width: 600px) {
+
+    .card-conversa {
+        width: 80%;
+        margin: 0;
+    }
+    .users{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
